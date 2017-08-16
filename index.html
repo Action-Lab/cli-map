@@ -7,11 +7,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
-  integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
-  crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
-  integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
-  crossorigin=""></script>
+      integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+      crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+      integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+      crossorigin=""></script>
 
     <style>
       html, body {
@@ -53,23 +53,54 @@
       var coordsTrin = [41.7479, -72.6903];
       var map = L.map('map').setView(coordsTrin, 15);
 
-      var tiles = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      var baselayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       	maxZoom: 19,
       	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       });
 
-      map.addLayer(tiles);
+      map.addLayer(baselayer);
 
       var popup = L.popup().setLatLng(coordsTrin).setContent('&#127979; Trinity College');
       popup.addTo(map);
 
-      map.on('click', function(e) {
+      /**
+       * Opens a popup with content
+       */
+      function openPopup(e, content) {
         popup.setLatLng(e.latlng);
-        var coords = e.latlng.lat + ',' + e.latlng.lng;
-        var content = '&#128652; <a href="https://maps.google.com/maps?t=m&hl=en-US&gl=US&mapclient=embed&saddr=Trinity%20College&daddr=' + coords + '&dirflg=r" target="_blank" >Go Here by Bus</a>';
         popup.setContent(content);
         popup.addTo(map);
-      })
+      };
+
+
+      /**
+       * Loads a .geojson file from routes/ and displays it on the map
+       */
+      function addRoute(number, color) {
+        $.getJSON('routes/' + number + '.geojson', function(data) {
+          var route = L.geoJSON(data, {style: {
+              color: color,
+              weight: 5,
+              opacity: 0.5
+            }
+          }).addTo(map);
+
+          route.on('click', function(e) {
+            L.DomEvent.stopPropagation(e);    // this is needed to prevent opening map's (not geojson's) popup
+            openPopup(e, 'Bus Route ' + number);
+          });
+        });
+      };
+
+      addRoute('37-39', 'blue');
+      addRoute('41', 'red');
+      addRoute('61', 'green');
+
+      map.on('click', function(e) {
+        var coords = e.latlng.lat + ',' + e.latlng.lng;
+        var content = '&#128652; <a href="https://maps.google.com/maps?t=m&hl=en-US&gl=US&mapclient=embed&saddr=Trinity%20College&daddr=' + coords + '&dirflg=r" target="_blank" >Go Here by Bus</a>';
+        openPopup(e, content);
+      });
 
     </script>
 
