@@ -53,11 +53,6 @@
       var coordsTrin = [41.7479, -72.6903];
       var map = L.map('map').setView(coordsTrin, 15);
 
-      var baselayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      	maxZoom: 19,
-      	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      });
-
       var baselayer = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
         maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy;\
         <a href="https://carto.com/attribution">CARTO</a>'
