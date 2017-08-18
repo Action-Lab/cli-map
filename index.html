@@ -58,7 +58,10 @@
       	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       });
 
-      map.addLayer(baselayer);
+      var baselayer = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+        maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy;\
+        <a href="https://carto.com/attribution">CARTO</a>'
+      }).addTo(map);
 
       var popup = L.popup().setLatLng(coordsTrin).setContent('&#127979; Trinity College');
       popup.addTo(map);
@@ -92,9 +95,9 @@
         });
       };
 
-      addRoute('37-39', 'blue');
-      addRoute('41', 'red');
-      addRoute('61', 'green');
+      addRoute('37-39', '#8000FF');
+      addRoute('41', '#FF0000');
+      addRoute('61', '#FF0000');
 
       map.on('click', function(e) {
         var coords = e.latlng.lat + ',' + e.latlng.lng;
